@@ -1,0 +1,31 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+The Question: Як медіана значення затримки прибуття рейсів Delta Air Lines залежить від медіани відстані?
+
+```{r}
+flights %>%
+  filter(carrier == "DL") %>%
+  group_by(dest) %>%
+  summarise(
+    median_delay = median(arr_delay, na.rm = TRUE),
+    median_distance = median(distance, na.rm = TRUE),
+    planes = n_distinct(tailnum),
+    flight_amount = n()
+    ) %>%
+  arrange(desc(median_delay))
+```
+```{r}
+flights %>%
+  filter(carrier == "DL") %>%
+  group_by(dest) %>%
+  summarise(
+    median_delay = median(arr_delay, na.rm = TRUE),
+    median_distance = median(distance, na.rm = TRUE),
+    count = n()
+    ) %>% 
+    filter(count > 50) %>%
+    ggplot(aes(x = median_distance, y = median_delay)) + geom_point(color = "orange", size = 2) + geom_smooth() 
+```
